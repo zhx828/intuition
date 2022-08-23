@@ -58,7 +58,7 @@ const Intuition = (props) => {
   const [itemVariant, setItemVariant] = useState(null);
   const [targetData, setTargetData] = useState(null);
 
-  const [isAuthenticated, setAuthenticated] = useState(false);
+  const [isAuthenticated, setAuthenticated] = useState(true);
   const [mutation1, setMutation1] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [mutation2, setMutation2] = useState('');
@@ -104,7 +104,6 @@ const Intuition = (props) => {
       status[0] = true;
       if (status[0] && status[1] && status[2] && status[3]) {
         setGroupItems(groupItems);
-        checkAuthentication();
       }
     });
     fetch(endpoint + "/mutationmaps/search/findAllSymbols")
@@ -117,7 +116,6 @@ const Intuition = (props) => {
       groupItems[1] = testItems;
       if (status[0] && status[1] && status[2] && status[3]) {
         setGroupItems(groupItems);
-        checkAuthentication();
       }
     });
     fetch(endpoint + "/drugmaps/search/findAllDrugs")
@@ -130,7 +128,6 @@ const Intuition = (props) => {
       groupItems[2] = testItems;
       if (status[0] && status[1] && status[2] && status[3]) {
         setGroupItems(groupItems);
-        checkAuthentication();
       }
     });
     fetch(endpoint + "/cancermaps/search/findAllCancerTypes")
@@ -143,7 +140,6 @@ const Intuition = (props) => {
       groupItems[3] = testItems;
       if (status[0] && status[1] && status[2] && status[3]) {
         setGroupItems(groupItems);
-        checkAuthentication();
       }
     });
   }, []);
@@ -237,40 +233,6 @@ const Intuition = (props) => {
     setAnalyzerState(state[17]);
     setSelectedVariant(state[18]);
     setItemVariant(state[19]);
-  }
-
-  const checkAuthentication = () => {
-    fetch(endpoint + "/conf/user")
-    .then(response => response.text())
-    .then(data => {
-      if (data.endsWith("mskcc.org")) {
-        setAuthenticated(true);
-        setUserName(data);
-      } else if (data.endsWith("google.com")) {
-        setAuthenticated(true);
-        setUserName(data);
-      }
-    });
-    fetch(endpoint + "/conf/user/me")
-    .then(response => response.json())
-    .then(data => {
-      if (data.emailAddress !== undefined) setUser(data);
-      //if (reload) onReload();
-    }).catch(e => {});
-  }
-
-  const loginSuccess = () => {
-    setAuthenticated(true);
-    //checkAuthentication();
-    //setFlashGene(flashGene+1);
-    //setFlashArticle(flashArticle+1);
-    setFlashAnalyzer(flashAnalyzer => flashAnalyzer+1);
-    fetch(endpoint + "/conf/user/me")
-        .then(response => response.json())
-        .then(data => {
-          if (data.emailAddress !== undefined) setUser(data);
-          //if (reload) onReload();
-        }).catch(e => {});
   }
 
   const sendTimer = (t) => {
@@ -932,7 +894,6 @@ const Intuition = (props) => {
       <Dropdown.Item as="button" onClick={() => handleLogin()}>Login</Dropdown.Item>
       </>}
     </DropdownButton>
-    {!isAuthenticated ? <LoginModal show={showLogin} onClose={() => setShowLogin(false)} auth={checkAuthentication} onAuthenticate={loginSuccess} /> : null}
     </div>
     </header>
     </div>

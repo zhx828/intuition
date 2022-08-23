@@ -60,7 +60,7 @@ public class VariantController {
         this.projectListRepository = projectListRepository;
     }
 
-    @Secured("ROLE_USER")
+    
     @RequestMapping(value = "/variantsByKey/{key}", method = RequestMethod.GET)
     public List<Variant> getVariantsByKey(@PathVariable("key") String key) {
         return variantRepository.findAllByKey(key);
@@ -78,7 +78,7 @@ public class VariantController {
         }
     }
 
-    @Secured("ROLE_USER")
+    
     @RequestMapping(value = "/variant/textAnalysis", method = RequestMethod.POST)
     public List<TextAnalysis> getTextAnalysis(@RequestBody TextAnalysis input) {
         Variant variant = variantRepository.findByDescriptor(input.getVariant());
@@ -170,7 +170,7 @@ public class VariantController {
         }
     }
 
-    @Secured("ROLE_USER")
+    
     @GetMapping(value = "/variants/download/autocuration{key}.xlsx", produces = {"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})
     public byte[] getVariantSpreadsheet(@PathVariable("key") String key) {
         byte[] data;
@@ -183,7 +183,7 @@ public class VariantController {
         return data;
     }
 
-    @Secured("ROLE_USER")
+    
     @RequestMapping(value = "/getVariantKeys", method = RequestMethod.GET)
     public List<String> getAllKeys() {
         List<String> result = new ArrayList<>();
@@ -193,19 +193,19 @@ public class VariantController {
         return result;
     }
 
-    @Secured("ROLE_USER")
+    
     @GetMapping(value = "/getVariantsByGene/{gene}")
     public List<Variant> getVariantsByGene(@PathVariable("gene") String gene) {
         return variantRepository.findAllByGene(gene.toUpperCase());
     }
 
-    @Secured("ROLE_USER")
+    
     @RequestMapping(value = "/runVariant", method = RequestMethod.GET)
     public void runVariant(String descriptor, Principal principal) {
         analyticsService.processVariants(Collections.singletonList(variantRepository.findByDescriptor(descriptor)));
     }
 
-    @Secured("ROLE_USER")
+    
     @RequestMapping(value = "/runVariants/{key}", method = RequestMethod.GET)
     public ResponseEntity<String> runVariants(@PathVariable("key") String key, Principal principal) {
         User user = userRepository.findByEmailAddress(principal.getName());
@@ -248,7 +248,7 @@ public class VariantController {
         return new ResponseEntity<>(t.getName(), HttpStatus.OK);
     }
 
-    @Secured("ROLE_USER")
+    
     @GetMapping("/vstop/{threadId}")
     public ResponseEntity<String> stopJob(@PathVariable("threadId") String threadId, Principal principal) {
         String userName = principal.getName();
@@ -268,7 +268,7 @@ public class VariantController {
         return new ResponseEntity<>("No match", HttpStatus.OK);
     }
 
-    @Secured("ROLE_USER")
+    
     @GetMapping(value = "/getPDB/{PDBcode}")
     public ResponseEntity<String> getPDB(@PathVariable("PDBcode") String PDBcode) {
         if (!PDBcode.endsWith(".pdb")) PDBcode += ".pdb";
@@ -281,7 +281,7 @@ public class VariantController {
         } else return new ResponseEntity<>("Could not find", HttpStatus.BAD_REQUEST);
     }
 
-    @Secured("ROLE_USER")
+    
     @PostMapping(value = "/updateVariant")
     public ResponseEntity<String> updateVariant(@RequestBody Variant v) {
         if (v.getId() == null) {
@@ -292,22 +292,15 @@ public class VariantController {
         return new ResponseEntity<>("Success!", HttpStatus.OK);
     }
 
-    @Secured("ROLE_USER")
+    
     @RequestMapping(value = "/getAllVariants", method = RequestMethod.GET)
     public List<Variant> getAllVariants() {
         return variantRepository.findAll();
     }
 
-    @Secured("ROLE_USER")
+    
     @PostMapping(value = "/addVariants/{key}")
     public ResponseEntity<String> addVariants(@PathVariable("key") String key, @RequestParam(value = "attachment") MultipartFile attachment, @RequestParam(value = "submitrun", required=false) Boolean submitRun, Principal principal) {
-        if (principal.getName() == null) return new ResponseEntity<>("Forbidden, no user located.", HttpStatus.FORBIDDEN);
-        log.info(principal.getName());
-        final User user = userRepository.findByEmailAddress(principal.getName());
-        if (user == null) {
-            log.error("No User?");
-            return new ResponseEntity<>("Forbidden, no user found.", HttpStatus.FORBIDDEN);
-        }
         if (attachment.getOriginalFilename() == null || !attachment.getOriginalFilename().toLowerCase().endsWith(".xlsx")) return new ResponseEntity<>("The file attachment is invalid, should end with .xlsx", HttpStatus.BAD_REQUEST);
         File folder = new File("PMC/scratch");
         if (!folder.exists()) folder.mkdir();
@@ -326,31 +319,7 @@ public class VariantController {
                     analyticsService.setThread(threadId);
                     analyticsService.processVariants(variantRepository.findAllByKey(key));
                     Thread t2;
-                    Map<String, Object> map = new ConcurrentHashMap<>(userCache.get(user));
-                    for (String s : map.keySet()) {
-                        if (s.equals(threadId)) {
-                            t2 = (Thread)map.get(s);
-                            map.remove(s);
-                            map.put("done-"+s.substring(s.indexOf('-')+1), t2);
-                            synchronized (userCache) {
-                                userCache.put(user, map);
-                            }
-                        }
-                    }
                 });
-                synchronized (userCache) {
-                    if (userCache.get(user) == null || userCache.get(user).isEmpty()) {
-                        Map<String, Object> jobMap = new HashMap<>();
-                        t.setName(threadId);
-                        jobMap.put(t.getName(), t);
-                        userCache.put(user, jobMap);
-                    } else {
-                        Map<String, Object> jobMap = userCache.get(user);
-                        t.setName(threadId);
-                        jobMap.put(t.getName(), t);
-                        userCache.put(user, jobMap);
-                    }
-                }
                 t.start();
                 jobName = t.getName();
             }

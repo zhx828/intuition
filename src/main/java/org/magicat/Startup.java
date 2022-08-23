@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.util.Collections;
+
 @SpringBootApplication(scanBasePackages = "org.magicat")
 //@EnableAutoConfiguration
 @EnableMongoRepositories(basePackages = "org.magicat.repository")
@@ -22,7 +24,9 @@ public class Startup {
 
     public static void main(String[] args) {
         startTime = DateTime.now();
-        SpringApplication.run(Startup.class, args);
+        SpringApplication app = new SpringApplication(Startup.class);
+        app.setDefaultProperties(Collections.singletonMap("server.port", 7050));
+        app.run();
     }
 
 }

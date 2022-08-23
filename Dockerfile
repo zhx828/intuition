@@ -15,6 +15,7 @@ RUN npm install
 RUN cp src/endpoint_deploy.js src/endpoint.js
 RUN npm run-script build
 
+RUN mkdir /app/src/main/webapp
 RUN cp -r build/* /app/src/main/webapp
 
 WORKDIR /app

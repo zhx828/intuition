@@ -290,7 +290,7 @@ public class ArticleController {
     }
 
 
-    @Secured("ROLE_USER")
+    
     @ApiOperation("Check that the download jobs are all finished to launch a new one, passing the running-{hashCode} item")
     @GetMapping(value = "/checkStatus/{code}")
     public String checkStatus(@PathVariable String code, Principal principal) {
@@ -313,7 +313,7 @@ public class ArticleController {
         return "done";
     }
 
-    @Secured("ROLE_USER")
+    
     @ApiOperation("Attempt to download all listed PMIDs")
     @PostMapping(value = "/downloadKnowledge")
     public String getItemsPDF(@RequestBody List<String> pmids, Principal principal) {
@@ -363,7 +363,7 @@ public class ArticleController {
         return threadId;
     }
 
-    @Secured("ROLE_USER")
+    
     @ApiOperation("Get the list of PMIDs and return the Article entities for each")
     @RequestMapping(value = "/fetch", method = RequestMethod.POST)
     public List<Article> getPMIDs(@RequestBody List<String> PMIDs) {
@@ -381,7 +381,7 @@ public class ArticleController {
         return fullTextRepository.findAllFullTextRegex(pmid).stream().map(FullText::getPmId).filter(pmId -> pmId.contains("S")).collect(Collectors.toList());
     }
 
-    @Secured("ROLE_ADMIN")
+    
     @ApiOperation(value = "Populate newest full text articles into MongoDB (for supplementaries) and Solr (for clustering)")
     @RequestMapping(value = "/populate", method = RequestMethod.GET)
     public String populateMongoSolr() {
@@ -393,7 +393,7 @@ public class ArticleController {
         }
     }
 
-    @Secured("ROLE_USER")
+    
     @ApiOperation(value = "Find articles from the query interface")
     @RequestMapping(value = "/query2", method = RequestMethod.POST)
     public List<Article> queryArticles2(@RequestBody ArticleFilters filters, Principal principal) {
@@ -480,7 +480,7 @@ public class ArticleController {
         return Math.min(Math.min(a, b), c);
     }
 
-    @Secured("ROLE_USER")
+    
     @ApiOperation("Get all supporting document resourceIds and filenames")
     @GetMapping("/supporting/{pmid}")
     public List<String> getSupportingResources(@PathVariable String pmid) {
@@ -497,7 +497,7 @@ public class ArticleController {
         return new ArrayList<>();
     }
 
-    @Secured("ROLE_USER")
+    
     @ApiOperation("Get a supporting document from the GridFS")
     @GetMapping("/supporting/{resourceId}/{filename}")
     public ResponseEntity<byte[]> getResource(@PathVariable("resourceId") String resourceId, @PathVariable("filename") String filename) throws IOException {
@@ -511,7 +511,7 @@ public class ArticleController {
         } else return null;
     }
 
-    @Secured("ROLE_USER")
+    
     @PostMapping(value = "/articles/addtext/{pmId}")
     public ResponseEntity<String> addPDF(@PathVariable String pmId, @RequestParam(value = "attachment") MultipartFile attachment) {
         Optional<FullText> oft = fullTextRepository.findById(pmId);
@@ -541,7 +541,7 @@ public class ArticleController {
         return new ResponseEntity<>("Success with " + attachment.getOriginalFilename(), HttpStatus.OK);
     }
 
-    @Secured("ROLE_USER")
+    
     @GetMapping("/stop/{threadId}")
     public ResponseEntity<String> stopJob(@PathVariable("threadId") String threadId, Principal principal) {
         String userName = principal.getName();

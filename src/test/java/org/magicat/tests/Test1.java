@@ -632,14 +632,6 @@ public class Test1 {
     }
 
     @Test
-    void testSuppl() {
-        List<FullText> fullTexts = fullTextRepository.findAllSupplementary();
-        for (FullText fullText : fullTexts) {
-            System.out.println(fullText.getPmId());
-        }
-    }
-
-    @Test
     public void cleanupTopics() {
         int i = 0;
         Page<Article> pages;
@@ -728,6 +720,11 @@ public class Test1 {
     @Test
     public void testAnalyticMissing() {
         System.out.println("Missing: " + analyticsService.missingFullTextArticles("oncokb_braf_tp53_ros1_pmids.xlsx"));
+    }
+
+    @Test
+    public void testMissingFullTextArticles() {
+        variantService.missingFullTextArticles(null);
     }
 
     @Test
@@ -887,7 +884,19 @@ public class Test1 {
 
     @Test
     public void adder() {
-        fullTextService.addArticle("1711486");
+        fullTextService.addArticle("19451690");
+    }
+
+    @Test
+    public void getSolrAllDocs() {
+        try {
+            SolrDocumentList list = solrClientTool.getAllDocuments();
+            log.info(String.valueOf(list.size()));
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -1193,7 +1202,7 @@ public class Test1 {
     public void articlesToSolr() {
         System.out.println("Running import to Solr");
         Page<Article> page;
-        int i = 15;
+        int i = 0;
         do {
             System.out.println("Iteration " + i);
             page = articleRepository.findAll(PageRequest.of(i++, 500000));
@@ -1309,6 +1318,7 @@ public class Test1 {
     @Test
     public void readPMIDs() {
         String data = readTSV();
+//        String data = "28448514";
         String[] data2 = data.split(", ");
         Set<String> pmids = new HashSet<>();
         for (String p : data2) {
@@ -1353,15 +1363,18 @@ public class Test1 {
                 variant.setMutation(items[7]);
                 variant.setOncogenicity(items[9]);
                 variant.setMutationEffect(items[10]);
-                variant.setCuratedPMIds(items[11]);
-                if (variantRepository.findAllByGeneAndMutation(items[5], items[7]) == null) {
+                variant.setCuratedPMIds(items.length > 11 ? items[11] : "");
+                variant.setDescriptor(items[5] + ":" + items[7] + "::");
+                if (variantRepository.findAllByGeneAndMutation(items[5], items[7]) == null || variantRepository.findAllByGeneAndMutation(items[5], items[7]).size() == 0) {
                     variant = variantRepository.save(variant);
                     System.out.println(variant + " added!");
                 }
 
-                if (i == 0) result.append(items[11]);
-                else result.append(", ").append(items[11]);
+                if (items.length > 11) {
+                    if (i == 0) result.append(items[11]);
+                    else result.append(", ").append(items[11]);
                     //System.out.println(items[11]);
+                }
                 i++;
             }
         } catch (Exception e) {
@@ -1525,7 +1538,7 @@ public class Test1 {
 
     @Test
     void runMapSteps() {
-        mapService.updateMaps(UpdateConfig.builder().genes(true).mutations(true)
+        mapService.updateMaps(UpdateConfig.builder().genes(true).mutations(true).geneCleanup(true)
                         .cancers(true).drugs(true).page(0).pageSize(1000000).build());
     }
 

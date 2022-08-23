@@ -6,7 +6,7 @@ import Main from './Main.js';
 const Routing = (props) => {
 
   return (
-    <BrowserRouter basename="/intuition" forceRefresh={false} history={props.history}>
+    <BrowserRouter basename="" forceRefresh={false} history={props.history}>
       <Switch>
         <Route exact path="/" component={Main} />
 	      {/*<Route exact path="/genesearch" component={GeneSearch} />*/}

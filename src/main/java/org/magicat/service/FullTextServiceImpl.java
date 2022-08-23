@@ -83,7 +83,7 @@ public class FullTextServiceImpl implements org.magicat.service.FullTextService 
                 log.info(PDFfiles.toString());
             }
             Optional<FullText> opt = fullTextRepository.findById(pmId);
-            if (opt.isEmpty()) {
+//            if (opt.isEmpty()) {
                 FullText fullText = new FullText();
                 fullText.setPmId(pmId);
                 Binary[] binary = new Binary[PDFfiles.size() + files.size()];
@@ -130,8 +130,12 @@ public class FullTextServiceImpl implements org.magicat.service.FullTextService 
                 String oldText = toText(a);
                 a.setFulltext(fullText.getTextEntry());
                 log.info("Adding Item");
-                UpdateResponse updateResponse = solrClientTool.add("knowledge", SolrClientTool.randomId(), a.getTitle(), a.getAuthors(), "https://aimlcoe.mskcc.org/knowledge/getPDF/" + fullText.getPmId() + ".pdf", null, fullText.getTextEntry());
-                log.info(updateResponse.toString());
+                try {
+                    UpdateResponse updateResponse = solrClientTool.add("knowledge", SolrClientTool.randomId(), a.getTitle(), a.getAuthors(), "http://localhost:7050/getPDF/" + fullText.getPmId() + ".pdf", null, fullText.getTextEntry());
+                    log.info(updateResponse.toString());
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                }
                 Map<String, List<String>> articleMap = new HashMap<>();
                 Map<String, List<String>> extraMap = new HashMap<>();
                 String text = Article.toText(a);
@@ -178,12 +182,12 @@ public class FullTextServiceImpl implements org.magicat.service.FullTextService 
                     if (!deleteDirectory(directory)) log.error("Could not delete the folder {}", "PMC/" + pmId);
                 }
                 return true;
-            }
+//            }
         } catch (IOException|SolrServerException e) {
             log.error(e.getMessage());
             return false;
         }
-        return false;
+//        return false;
     }
 
     private boolean deleteDirectory(File directoryToBeDeleted) {

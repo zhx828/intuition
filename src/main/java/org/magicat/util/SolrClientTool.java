@@ -52,7 +52,7 @@ public class SolrClientTool {
     public final static Logger log = LoggerFactory.getLogger(SolrClientTool.class);
 
     private final static boolean cloud = ConfigProperties.solrCloud;
-    private final static String httpUrl = "http://192.168.1.86:8983/solr"; // "http://aimlcoe.mskcc.org:8983/solr"
+    private final static String httpUrl = "http://127.0.0.1:8983/solr"; // "http://aimlcoe.mskcc.org:8983/solr"
     private final List<String> solrCloudURLs = Arrays.asList("http://plbd01.mskcc.org:8983/solr", "http://plbd02.mskcc.org:8983/solr");
 
     private final SolrClient client = cloud ? new CloudSolrClient.Builder(solrCloudURLs).withParallelUpdates(true).build() : new HttpSolrClient.Builder().withBaseSolrUrl(httpUrl).allowCompression(true).build();

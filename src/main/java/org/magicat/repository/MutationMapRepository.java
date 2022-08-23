@@ -44,12 +44,12 @@ public interface MutationMapRepository extends MongoRepository<MutationMap, Stri
     @RestResource(exported = false)
     void delete(MutationMap mutationMap);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     @RestResource(exported = false)
     void deleteAll(Iterable<? extends MutationMap> mutationMaps);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     @RestResource(exported = false)
     void deleteAll();

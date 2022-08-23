@@ -21,19 +21,19 @@ public interface GeneMapRepository extends MongoRepository<GeneMap, String> {
     List<GeneMap> findAllSymbols();
 
     @NotNull
-    //@Secured("ROLE_ADMIN")
+    //
     @Override
     @RestResource(exported = false)
     <S extends GeneMap> List<S> saveAll(@NotNull Iterable<S> entities);
 
     @NotNull
-    //@Secured("ROLE_ADMIN")
+    //
     @Override
     @RestResource(exported = false)
     <S extends GeneMap> S insert(@NotNull S entity);
 
     @NotNull
-    //@Secured("ROLE_ADMIN")
+    //
     @Override
     @RestResource(exported = false)
     <S extends GeneMap> List<S> insert(@NotNull Iterable<S> entities);
@@ -46,17 +46,17 @@ public interface GeneMapRepository extends MongoRepository<GeneMap, String> {
     @RestResource(exported = false)
     void deleteById(String id);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     @RestResource(exported = false)
     void delete(GeneMap geneMap);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     @RestResource(exported = false)
     void deleteAll(Iterable<? extends GeneMap> geneMaps);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     @RestResource(exported = false)
     void deleteAll();

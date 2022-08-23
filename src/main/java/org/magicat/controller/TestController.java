@@ -22,7 +22,7 @@ public class TestController {
         this.articleRepository = articleRepository;
     }
 
-    @Secured("ROLE_ADMIN")
+    
     @RequestMapping(value = "/validateDates", method = RequestMethod.GET)
     public String validateDates() {
         final int pageLimit = 50;

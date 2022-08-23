@@ -37,7 +37,7 @@ public class ServiceController {
         this.spellChecking = spellChecking;
     }
     
-    @Secured("ROLE_USER")
+    
     @RequestMapping(value = "/textArticle/{pmid}", method = RequestMethod.GET)
     public List<Section> getTextArticle(@PathVariable String pmid, @RequestParam(required = false) Boolean rebuild) throws IOException {
         Article article = articleRepository.findByPmId(pmid);
@@ -58,7 +58,7 @@ public class ServiceController {
         return document.getSections();
     }
 
-    @Secured("ROLE_USER")
+    
     @RequestMapping(value = "/HTMLArticle/{pmid}", method = RequestMethod.GET)
     public String getHTMLArticle(@PathVariable String pmid, @RequestParam(required = false) Boolean rebuild) throws IOException {
         Article article = articleRepository.findByPmId(pmid);

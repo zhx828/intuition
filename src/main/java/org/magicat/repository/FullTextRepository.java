@@ -12,10 +12,6 @@ import java.util.List;
 
 @Repository
 public interface FullTextRepository extends MongoRepository<FullText, String> {
-
-    @Query(value = "{ _id: { $regex: 'S'} }")
-    List<FullText> findAllSupplementary();
-
     @Query(value = "{ _id: { $regex: 'S'} }")
     Page<FullText> findAllSupplementary(Pageable pageable);
 

@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  intuition:
+    build:
+      context: ./intuition
+    restart: always
+    ports:
+      - 7050:7050

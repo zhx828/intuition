@@ -70,10 +70,10 @@ public class ArticleServiceImpl implements ArticleService {
             log.info("No article {}", pmId);
             return false;
         }
-        if (a.getFulltext() != null) {
-            log.info("Full text already exists for {}", pmId);
-            return false;
-        }
+//        if (a.getFulltext() != null) {
+//            log.info("Full text already exists for {}", pmId);
+//            return false;
+//        }
         if (a.getPmcId() == null || a.getPmcId().length() < 2) {
             String doiurl;
             String fileName;

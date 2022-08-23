@@ -12,35 +12,35 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "journals", path = "journals")
 public interface JournalRepository extends MongoRepository<Journal, String> {
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     <S extends Journal> List<S> saveAll(Iterable<S> entities);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     <S extends Journal> S insert(S entity);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     <S extends Journal> List<S> insert(Iterable<S> entities);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     <S extends Journal> S save(S entity);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     void deleteById(String id);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     void delete(Journal journal);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     void deleteAll(Iterable<? extends Journal> journals);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     void deleteAll();
 

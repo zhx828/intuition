@@ -31,15 +31,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         // auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
-        auth.authenticationProvider(authenticationProvider());
+//        auth.authenticationProvider(authenticationProvider());
     }
 
     public void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and().csrf().disable().authorizeRequests()
-                .antMatchers(PUT, "/submit").hasAnyRole("USER", "ADMIN")
-                .antMatchers(PUT, "/addprotein").hasAnyRole("USER", "ADMIN")
-                .antMatchers(GET, "/conf/userlist").hasRole("ADMIN")
+//                .antMatchers(PUT, "/submit").hasAnyRole("USER", "ADMIN")
+//                .antMatchers(PUT, "/addprotein").hasAnyRole("USER", "ADMIN")
+//                .antMatchers(GET, "/conf/userlist").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and().logout(logout -> logout

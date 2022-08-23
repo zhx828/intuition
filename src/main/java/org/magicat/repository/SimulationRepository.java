@@ -8,7 +8,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 
 @ApiIgnore
-//@Secured("ROLE_USER")
 @RepositoryRestResource(collectionResourceRel = "simulation", path = "simulation")
 public interface SimulationRepository extends MongoRepository<Simulation, String> {
 

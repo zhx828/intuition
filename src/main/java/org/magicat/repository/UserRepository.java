@@ -28,19 +28,19 @@ public interface UserRepository extends MongoRepository<User, String> {
     @Override
     <S extends User> S save(@NotNull S entity);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     void deleteById(@NotNull String id);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     void delete(@NotNull User user);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     void deleteAll(Iterable<? extends User> users);
 
-    @Secured("ROLE_ADMIN")
+    
     @Override
     void deleteAll();
 

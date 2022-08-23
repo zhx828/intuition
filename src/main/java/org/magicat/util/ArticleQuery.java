@@ -298,7 +298,7 @@ public class ArticleQuery {
     public static List<String> readDrugs() {
         List<String> drugs = new ArrayList<>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("drugs"));
+            BufferedReader reader = new BufferedReader(new FileReader("drugs.csv"));
             while (reader.ready()) {
                 drugs.add(reader.readLine());
             }
